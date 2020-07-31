@@ -13,12 +13,14 @@ const User = require('../../models/User');
 // @access  Public
 router.post(
   '/',
-  [check('name', 'Name is required').not().isEmpty()],
-  check('email', 'Please include valid email').isEmail(),
-  check(
-    'password',
-    'Please enter a password between 6 and 20 chatacters'
-  ).isLength({ min: 6, max: 20 }),
+  [
+    check('name', 'Name is required').not().isEmpty(),
+    check('email', 'Please include valid email').isEmail(),
+    check(
+      'password',
+      'Please enter a password between 6 and 20 chatacters'
+    ).isLength({ min: 6, max: 20 }),
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
