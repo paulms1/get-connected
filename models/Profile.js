@@ -5,6 +5,10 @@ const ProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
+  location: {
+    type: String,
+    required: true,
+  },
   mainInstrument: {
     type: String,
     required: true,
@@ -15,7 +19,6 @@ const ProfileSchema = new mongoose.Schema({
   },
   otherInstruments: {
     type: [String],
-    required: true,
   },
   genres: {
     type: String,

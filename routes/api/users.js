@@ -14,12 +14,34 @@ const User = require('../../models/User');
 router.post(
   '/',
   [
-    check('name', 'Name is required').not().isEmpty(),
-    check('email', 'Please include valid email').isEmail(),
-    check(
-      'password',
-      'Please enter a password between 6 and 20 chatacters'
-    ).isLength({ min: 6, max: 20 }),
+    check('email', 'Please include valid email')
+      .trim()
+      .not()
+      .isEmpty()
+      .bail()
+      .isString()
+      .isEmail()
+      .bail()
+      .escape()
+      .normalizeEmail(),
+    check('age', 'age is required')
+      .trim()
+      .not()
+      .isEmpty()
+      .bail()
+      .toInt()
+      .isInt({ min: 16 })
+      .withMessage('You must be 16 years of age to register on this site')
+      .isInt({ max: 120 })
+      .withMessage('The oldest person in the world is 116 years old'),
+    check('password', 'Please enter a password between 8 and 20 chatacters')
+      .isString()
+      .isLength({ min: 8, max: 20 })
+      .bail()
+      .matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})')
+      .withMessage(
+        'Password must contain one lowercase and one uppercase letter, one number and one special character'
+      ),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -27,7 +49,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, age, email, password } = req.body;
 
     try {
       // Check if user already exists
@@ -41,6 +63,7 @@ router.post(
 
       user = new User({
         name,
+        age,
         email,
         password,
       });
