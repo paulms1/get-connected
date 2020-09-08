@@ -21,7 +21,7 @@ const ProfileSchema = new mongoose.Schema({
     type: [String],
   },
   genres: {
-    type: String,
+    type: [String],
     required: true,
   },
   bio: {
